@@ -17,6 +17,12 @@ the option 'user [create delete info]' is required but missing
 
 # invalid command
 unrecognised option 'invalidcommand'
+usage: radosgw-admin <cmd> [options...]
+commands:
+  user create   	create a new user 
+  user delete   	delete a user 
+  user info     	get user info 
+
 options:
   -h [ --help ]         display help
   --uid arg             user id
@@ -26,6 +32,12 @@ options:
 
 # invalid option
 unrecognised option '--invalidoption'
+usage: radosgw-admin <cmd> [options...]
+commands:
+  user create   	create a new user 
+  user delete   	delete a user 
+  user info     	get user info 
+
 options:
   -h [ --help ]         display help
   --uid arg             user id

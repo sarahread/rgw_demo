@@ -5,6 +5,14 @@
 #include <boost/version.hpp>
 #include <iostream>
 
+void print_cmds(){
+  std::cout << "commands:\n"
+    << "  user create   \tcreate a new user \n"
+    << "  user delete   \tdelete a user \n"
+    << "  user info     \tget user info \n"
+    << std::endl;
+}
+
 int main( int argc, char** argv )
 {
     namespace po = boost::program_options;
@@ -33,15 +41,10 @@ int main( int argc, char** argv )
         po::notify(vm_opt);
 
         if (vm_opt.count("help")) {
-            std::cout <<  "usage: radosgw-admin <cmd> [options...]" << std::endl;
-            std::cout << "commands:\n"
-                << "  user create   \tcreate a new user \n"
-                << "  user delete   \tdelete a user \n"
-                << "  user info     \tget user info \n"
-            << std::endl;
-
-            std::cout << desc;
-            return 0;
+          std::cout <<  "usage: radosgw-admin <cmd> [options...]" << std::endl;
+          print_cmds();
+          std::cout << desc;
+          return 0;
         }
 
         if(vm_opt.count("uid")) {
@@ -90,7 +93,9 @@ int main( int argc, char** argv )
         }
 
     } catch ( const boost::program_options::error& e ) {
-        std::cerr << e.what() << std::endl;
-        std::cout << desc << std::endl;
+      std::cerr << e.what() << std::endl;
+      std::cout <<  "usage: radosgw-admin <cmd> [options...]" << std::endl;
+      print_cmds();
+      std::cout << desc << std::endl;
     }
 }
