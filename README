@@ -1,0 +1,33 @@
+#Outreachy: ceph - radosgw-admin application
+#Boost::program_options demo
+
+What this program does: 
+- shows how well boost handles double dash options (long and short)
+- shows different methods for storing arguments 
+  (by reference or automatic storage in po::variables_map for later processing)
+- shows you can handle unrecognized options manually
+- shows you can throw boost errors
+- shows you can generate usage() for dashed options automatically
+- implicitly handles --uid 200 and --uid=200 syntax (although boost prints the former in --help)
+
+What this program doesn't do: 
+- deal with commands in a OO way, necessary for a bigger application (struct, class or an std type)
+- validate the options passed by the user to make sure they match the command
+- break out functionality into smaller sub-functions, ie. parse_cmd, get_cmd, etc.
+
+
+-- Build Instructions -- 
+Boost::program_options is a library and must be installed on the build system for linking (-lboost_program_options). 
+	sudo apt-get install libboost-porgram-options-dev 
+
+
+-- Build Commands (using Makefile) -- 
+make
+make clean 
+
+
+-- Sample Output -- 
+./run.sh
+
+execute a set of sample inputs
+output printed to the console and stored in sample.output

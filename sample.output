@@ -1,0 +1,49 @@
+# user create
+uid: 42
+email: foo@gmail.com
+display name: foo
+user created with uid 42, display name foo and email foo@gmail.com
+
+# user delete
+uid: 42
+user deleted with uid 42
+
+# user info
+uid: 42
+user info for uid 42
+
+# user (no subcommand)
+the option 'user [create delete info]' is required but missing
+
+# invalid command
+unrecognised option 'invalidcommand'
+options:
+  -h [ --help ]         display help
+  --uid arg             user id
+  --email arg           email
+  --display-name arg    display name
+
+
+# invalid option
+unrecognised option '--invalidoption'
+options:
+  -h [ --help ]         display help
+  --uid arg             user id
+  --email arg           email
+  --display-name arg    display name
+
+
+# help
+usage: radosgw-admin <cmd> [options...]
+commands:
+  user create   	create a new user 
+  user delete   	delete a user 
+  user info     	get user info 
+
+options:
+  -h [ --help ]         display help
+  --uid arg             user id
+  --email arg           email
+  --display-name arg    display name
+
+run finished.
