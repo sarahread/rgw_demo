@@ -2,10 +2,11 @@
 #Boost::program_options demo
 
 What this program does: 
-- shows how well boost handles double dash options (long and short)
+- shows how boost handles double dash options (long and short)
 - shows different methods for storing arguments 
   (by reference or automatic storage in po::variables_map for later processing)
-- shows you can handle unrecognized options manually
+- shows you can catch unrecognized options manually
+  (program_options CAN'T recognize anything without dashes)
 - shows you can throw boost errors
 - shows you can generate usage() for dashed options automatically
 - implicitly handles --uid 200 and --uid=200 syntax (although boost prints the former in --help)
