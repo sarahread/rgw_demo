@@ -28,13 +28,13 @@ enum {
 };
 
 std::vector<Command> commands = {
-  { OPT_USER_CREATE, 	"user", 	"create", 	"create a new user"},
-  { OPT_USER_INFO, 		"user", 	"info", 	"get user info"},
-  { OPT_USER_DELETE, 	"user", 	"delete", 	"remove user"},
-  { OPT_USER_SUSPEND, 	"user", 	"suspend",	"suspend a user"},
-  { OPT_USER_ENABLE, 	"user", 	"enable", 	"re-enable user after suspension"},
-  { OPT_USER_CHECK, 	"user", 	"check",	"check user info"},
-  { OPT_USER_STATS, 	"user", 	"stats",	"show user stats as accounted by quota subsystem"},
-  { OPT_USER_LIST,		"user", 	"list",		"list users"},
-  { OPT_POLICY, 		"policy", 	"", 		"read bucket/object policy"}
+  { OPT_USER_CREATE,    "user",     "create",   "create a new user"},
+  { OPT_USER_INFO,      "user",     "info",     "get user info"},
+  { OPT_USER_DELETE,    "user",     "delete",   "remove user"},
+  { OPT_USER_SUSPEND,   "user",     "suspend",  "suspend a user"},
+  { OPT_USER_ENABLE,    "user",     "enable",   "re-enable user after suspension"},
+  { OPT_USER_CHECK,     "user",     "check",    "check user info"},
+  { OPT_USER_STATS,     "user",     "stats",    "show user stats as accounted by quota subsystem"},
+  { OPT_USER_LIST,      "user",     "list",     "list users"},
+  { OPT_POLICY,         "policy",   "",         "read bucket/object policy"}
 };
