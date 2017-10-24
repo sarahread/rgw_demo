@@ -3,26 +3,49 @@ uid: 42
 email: foo@gmail.com
 display name: foo
 user created with uid 42, display name foo and email foo@gmail.com
+user create complete.
 
 # user delete
 uid: 42
 user deleted with uid 42
+user delete complete.
 
 # user info
 uid: 42
 user info for uid 42
+user info complete.
 
 # user (no subcommand)
-the option 'user [create delete info]' is required but missing
+option is ambiguous and matches 'check', 'create', 'delete', 'enable', 'info', 'list', 'stats', and 'suspend'
+usage: radosgw-admin <cmd> [options...]
+  user create		create a new user
+  user info		get user info
+  user delete		remove user
+  user suspend		suspend a user
+  user enable		re-enable user after suspension
+  user check		check user info
+  user stats		show user stats as accounted by quota subsystem
+  user list		list users
+  policy 		read bucket/object policy
+options:
+  -h [ --help ]         display help
+  --uid arg             user id
+  --email arg           email
+  --display-name arg    display name
+
 
 # invalid command
 unrecognised option 'invalidcommand'
 usage: radosgw-admin <cmd> [options...]
-commands:
-  user create   	create a new user 
-  user delete   	delete a user 
-  user info     	get user info 
-
+  user create		create a new user
+  user info		get user info
+  user delete		remove user
+  user suspend		suspend a user
+  user enable		re-enable user after suspension
+  user check		check user info
+  user stats		show user stats as accounted by quota subsystem
+  user list		list users
+  policy 		read bucket/object policy
 options:
   -h [ --help ]         display help
   --uid arg             user id
@@ -33,11 +56,15 @@ options:
 # invalid option
 unrecognised option '--invalidoption'
 usage: radosgw-admin <cmd> [options...]
-commands:
-  user create   	create a new user 
-  user delete   	delete a user 
-  user info     	get user info 
-
+  user create		create a new user
+  user info		get user info
+  user delete		remove user
+  user suspend		suspend a user
+  user enable		re-enable user after suspension
+  user check		check user info
+  user stats		show user stats as accounted by quota subsystem
+  user list		list users
+  policy 		read bucket/object policy
 options:
   -h [ --help ]         display help
   --uid arg             user id
@@ -47,11 +74,15 @@ options:
 
 # help
 usage: radosgw-admin <cmd> [options...]
-commands:
-  user create   	create a new user 
-  user delete   	delete a user 
-  user info     	get user info 
-
+  user create		create a new user
+  user info		get user info
+  user delete		remove user
+  user suspend		suspend a user
+  user enable		re-enable user after suspension
+  user check		check user info
+  user stats		show user stats as accounted by quota subsystem
+  user list		list users
+  policy 		read bucket/object policy
 options:
   -h [ --help ]         display help
   --uid arg             user id

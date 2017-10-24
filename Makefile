@@ -4,7 +4,7 @@
 PROG = radosgw-admin
 CC = g++
 
-CPPFLAGS =
+CPPFLAGS = -std=c++11
 LDFLAGS = -lboost_program_options
 SRC = rgw_demo.cc
 

@@ -2,100 +2,142 @@
 // Boost::program_options demo
 
 #include <boost/program_options.hpp>
-#include <boost/version.hpp>
 #include <iostream>
+#include "commands.h"
 
-void print_cmds(){
-  std::cout << "commands:\n"
-    << "  user create   \tcreate a new user \n"
-    << "  user delete   \tdelete a user \n"
-    << "  user info     \tget user info \n"
-    << std::endl;
-}
+namespace po = boost::program_options;
 
 int main( int argc, char** argv )
 {
-    namespace po = boost::program_options;
+  po::options_description desc("options");
 
-    po::options_description desc("options");
+  int user_id;
+  std::string email;
+  std::string display_name;
 
-    int user_id;
-    std::string email;
-    std::string display_name;
+  desc.add_options()
+    ("help,h",                                   "display help")
+    ("uid",           po::value<int>(),          "user id") 
+    ("email",         po::value(&email),         "email")
+    ("display-name",  po::value(&display_name),  "display name")
+  ;
 
-    desc.add_options()
-      ("help,h",                                   "display help")
-      ("uid",           po::value<int>(),          "user id") 
-      ("email",         po::value(&email),         "email")
-      ("display-name",  po::value(&display_name),  "display name")
-    ;
+  const Command* operation = NULL;
+  std::string current;
+  std::string previous;
 
-    po::variables_map vm_opt;
-    po::variables_map vm_all;
+  po::variables_map vm;
 
-    try {
+  try {
 
-        // handle options (--)
-        po::parsed_options parsed = po::command_line_parser(argc, argv).options(desc).run();
-        po::store(parsed, vm_opt);
-        po::notify(vm_opt);
-
-        if (vm_opt.count("help")) {
-          std::cout <<  "usage: radosgw-admin <cmd> [options...]" << std::endl;
-          print_cmds();
-          std::cout << desc;
-          return 0;
-        }
-
-        if(vm_opt.count("uid")) {
-          user_id = vm_opt["uid"].as<int>();
-          std::cout << "uid: " << user_id << std::endl;
-        }
-
-        if(vm_opt.count("email")) {
-          std::cout << "email: " << email << std::endl;
-        }
-
-        if(vm_opt.count("display-name")) {
-          std::cout << "display name: " << display_name << std::endl;
-        }
-
-        // handle commands
-        // method 1: use args and handle the supported commands like the original application (not doing this)
-        // method 2: trying to make program_options help us out... it is not as nice as it could be
-        po::parsed_options parsed_all = po::command_line_parser(argc, argv).options(desc).allow_unregistered().run();
-        po::store(parsed_all, vm_all);
-
-        std::string cmd_output;
-        std::vector<std::string> commands = collect_unrecognized(parsed_all.options, po::include_positional);
-        for(std::vector<std::string>::const_iterator cmd = commands.begin(); cmd != commands.end(); ++cmd){
-
-          if(*cmd == "user") {
-            cmd++;
-            if(cmd == commands.end())
-              throw po::required_option("user [create delete info]");
-
-            if(*cmd == "create"){
-              std::cout << "user created with uid " << user_id << ", display name " 
-                << display_name << " and email " << email << std::endl; 
+    // Use argv directly to obtain the commands (usually 2 commands, can be 1)
+    int argv_index = 1;
+    while(argv_index < argc && !operation){
+      // Leave "--" options for boost
+      if(std::string(argv[argv_index]).find("--") == 0){
+        //argv_index++;
+        //continue;
+        break;
+      }
+      else { // First command string (Command.cmd)
+        if(previous.empty()){
+          for(const auto& command : commands) {
+            if(argv[argv_index] == command.cmd){
+              previous = std::string(argv[argv_index]);
+              if(command.action.empty())
+                operation = &command;
             }
-            if(*cmd == "delete"){
-              std::cout << "user deleted with uid " << user_id << std::endl;
-            }
-            if(*cmd == "info"){
-              std::cout << "user info for uid " << user_id << std::endl;
-            }
-          } else {
-            // because unregistered options were allowed, throw manually if 
-            // there is a command we don't handle
-            throw po::unknown_option(*cmd);
+          }
+          if(previous.empty()){
+            throw po::unknown_option(argv[argv_index]);
           }
         }
-
-    } catch ( const boost::program_options::error& e ) {
-      std::cerr << e.what() << std::endl;
-      std::cout <<  "usage: radosgw-admin <cmd> [options...]" << std::endl;
-      print_cmds();
-      std::cout << desc << std::endl;
+        else { // Second command string (Command.action)
+          for(const auto& command : commands) {
+            if(previous == command.cmd && argv[argv_index] == command.action){
+              operation = &command;
+            }
+          }
+          if(!operation){
+            throw po::unknown_option(argv[argv_index]);
+          }
+        }
+      }
+      argv_index++;
     }
+
+    // Error: second command string missing
+    if(!previous.empty() && !operation) {
+      std::vector<std::string> alternatives;
+      for(const auto& command : commands) {
+        if(previous == command.cmd){
+          alternatives.push_back(command.action);
+        }
+      }
+      throw po::ambiguous_option(alternatives);
+    }
+
+    po::store(po::parse_command_line(argc, argv, desc), vm);
+    po::notify(vm);
+
+    if (vm.count("help")) {
+        std::cout << "usage: radosgw-admin <cmd> [options...]" << std::endl;
+        for(const auto& it : commands) {
+          std::cout << it;
+        }
+        std::cout << desc;
+    }
+
+    // Option Handlers
+    if(vm.count("uid")) {
+      user_id = vm["uid"].as<int>();
+      std::cout << "uid: " << user_id << std::endl;
+    }
+
+    if(vm.count("email")) {
+      std::cout << "email: " << email << std::endl;
+    }
+
+    if(vm.count("display-name")) {
+      std::cout << "display name: " << display_name << std::endl;
+    }
+
+    // Command Handlers
+    // TODO: verify that the correct options were passed
+    // possible to eliminate switch? function pointers?
+    if(operation) {
+
+      switch(operation->id){
+
+        case OPT_USER_CREATE:
+          std::cout << "user created with uid " << user_id << ", display name " 
+          << display_name << " and email " << email << std::endl;
+            break;
+
+        case OPT_USER_INFO: 
+          std::cout << "user info for uid " << user_id << std::endl;
+          break;
+
+        case OPT_USER_DELETE:
+          std::cout << "user deleted with uid " << user_id << std::endl;
+          break;
+
+        default:
+          break;
+      }
+
+      std::cout << operation->cmd
+        << (operation->action.empty() ? "" : " " + operation->action )
+        << " complete." << std::endl;
+    }
+
+  } catch ( const boost::program_options::error& e ) {
+    std::cerr << e.what() << std::endl;
+    std::cout <<  "usage: radosgw-admin <cmd> [options...]" << std::endl;
+    
+    for(const auto& it : commands) {
+      std::cout << it;
+    }
+    std::cout << desc << std::endl;
+  }
 }

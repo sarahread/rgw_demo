@@ -19,7 +19,7 @@ echo "# user info"
 echo
 
 echo "# user (no subcommand)"
-./radosgw-admin user  >> sample.output
+./radosgw-admin user
 echo
 
 echo "# invalid command" 
